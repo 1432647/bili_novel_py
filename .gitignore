@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.spec
+*.egg-info/
+dist/
+build/
+.env
+venv/
+output/
+*.epub

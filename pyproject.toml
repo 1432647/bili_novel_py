@@ -1,0 +1,15 @@
+[project]
+name = "bili-novel-packer"
+version = "0.3.0"
+description = "轻小说打包器 - Python rewrite with Cloudflare bypass"
+requires-python = ">=3.10"
+dependencies = [
+    "curl_cffi>=0.5.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.0.0",
+    "ebooklib>=0.18",
+    "Pillow>=10.0.0",
+]
+
+[project.scripts]
+bili-novel-packer = "main:main"
