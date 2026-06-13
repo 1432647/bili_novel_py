@@ -153,7 +153,7 @@ class EpubPacker:
 
         if cover_data:
             try:
-                book.set_cover(f"images/cover{cover_ext}", cover_data, create_page=False)
+                book.set_cover(f"images/cover{cover_ext}", cover_data, create_page=True)
             except Exception as e:
                 print(f"  [warn] Failed to set cover: {e}")
 

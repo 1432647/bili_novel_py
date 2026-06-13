@@ -99,8 +99,8 @@ class BiliNovelSource:
             novel.alias = backup.get_text(strip=True)
 
         img = _first_of(soup, ".book-layout img", ".book-img img", ".book-detail .book-img img")
-        if img and img.get("src"):
-            novel.cover_url = img["src"]
+        if img:
+            novel.cover_url = img.get("data-original") or img.get("data-src") or img.get("src")
 
         tags = soup.select(".book-cell .book-meta span em")
         if not tags:
@@ -427,15 +427,17 @@ class BiliNovelSource:
     @staticmethod
     def _fix_image_srcs(element: Tag) -> None:
         for img in element.select("img"):
-            src = img.get("data-src") or img.get("src")
+            src = img.get("data-original") or img.get("data-src") or img.get("src")
             if src:
                 if "<" in src:
                     img.decompose()
                     continue
                 if src.startswith("//"):
                     src = "https:" + src
-                elif not src.startswith("http"):
+                elif src.startswith("/"):
                     src = DOMAIN + src
+                elif not src.startswith("http"):
+                    src = DOMAIN + "/" + src
                 img["src"] = src
             for attr in list(img.attrs.keys()):
                 if attr not in ("src", "alt", "class"):
@@ -445,7 +447,11 @@ class BiliNovelSource:
         if src.startswith("data:image"):
             import base64
             return base64.b64decode(src.split(",")[1])
-        if not src.startswith("http"):
+        if src.startswith("//"):
+            src = "https:" + src
+        elif src.startswith("/"):
+            src = DOMAIN + src
+        elif not src.startswith("http"):
             src = DOMAIN + "/" + src
         src = src.replace("https://https://", "https://")
         self._img_rate_limiter.acquire()
